@@ -11,15 +11,10 @@ import {
   CardFooter,
 } from "./ui/card";
 import { Input } from "./ui/input";
-import Bard, { askAI } from "bard-ai";
 
 export async function Chat() {
 
   const bard_key = 'ZQh5Q_XGxrdzDOivVT-HYrZDW-2Gw6n2MzTAsHLD1Ic1aspjSJC8ze1lNMj7pJpoXIYhaw.';
-
-  await Bard.init(bard_key);
-
-  const new_conversation = new Bard.Chat();
 
   return (
     <Card className="w-[550px] h-[700px] grid grid-rows-[min-content_1fr_min-content]">
