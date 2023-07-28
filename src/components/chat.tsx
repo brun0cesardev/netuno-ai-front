@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, use, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -118,6 +118,7 @@ export const Chat = () => {
         <div className="w-full flex gap-2 pt-5">
           <Input
             placeholder="Qual a boa chefe?"
+            className="bg-slate-200"
             onChange={(event) => {
               setTheQuestion(String(event.currentTarget.value));
             }}
