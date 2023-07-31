@@ -17,12 +17,28 @@ import { api } from "@/lib/axios";
 interface questionsProps {
   Question: String;
   Answer: String;
+  Rows: textAnswerProps;
+}
+
+interface languageProps {
+  Word: String;
+  Language: String;
+}
+
+interface textAnswerProps {
+  qtRows: Number;
+  rowsAnswer: [
+    {
+      isCode: Boolean;
+      theRow: any;
+    }
+  ];
 }
 
 export const Chat = () => {
   const [theQuestion, setTheQuestion] = useState("");
   const [listQuestions, setListQuestions] = useState([] as questionsProps[]);
-  const cardContentRef = useRef<HTMLDivElement | null>(null); 
+  const cardContentRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = async () => {
     await enviaPergunta(theQuestion);
@@ -45,6 +61,7 @@ export const Chat = () => {
         {
           Question: question,
           Answer: "",
+          Rows: { qtRows: 0, rowsAnswer: [{ isCode: false, theRow: "" }] },
         },
       ]);
       const response = await api.post(`api/getanswer`, { question });
@@ -61,8 +78,84 @@ export const Chat = () => {
       if (response.status === 200) {
         setListQuestions([
           ...listQuestions,
-          { Question: question, Answer: response.data },
+          {
+            Question: question,
+            Answer: response.data,
+            Rows: { qtRows: 0, rowsAnswer: [{ isCode: false, theRow: "" }] },
+          },
         ]);
+      }
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  }
+
+  async function verificaLinguaguem(textQuestion: string, textAnswer: string) {
+    try {
+      let verificaQuestao = false;
+
+      const listLanguage: languageProps[] = [
+        { Word: "$react$", Language: "js" },
+        { Word: "$reactjs$", Language: "js" },
+        { Word: "$react.js$", Language: "js" },
+        { Word: "$javascript$", Language: "js" },
+        { Word: "$js$", Language: "js" },
+        { Word: "$node$", Language: "js" },
+        { Word: "$nodejs$", Language: "js" },
+        { Word: "$tsx$", Language: "typescript" },
+        { Word: "$typescript$", Language: "typescript" },
+        { Word: "$ts$", Language: "typescript" },
+        { Word: "$delphi$", Language: "delphi" },
+        { Word: "$demonho$", Language: "delphi" },
+        { Word: "$c-normal$", Language: "c" },
+        { Word: "$c-plus$", Language: "c++" },
+        { Word: "$csharp$", Language: "csharp" },
+        { Word: "$c#$", Language: "csharp" },
+        { Word: "$c-sharp$", Language: "csharp" },
+        { Word: "$c++$", Language: "c++" },
+        { Word: "$dart$", Language: "dart" },
+        { Word: "$dockerfile$", Language: "dockerfile" },
+        { Word: "$linguagem-go$", Language: "go" },
+        { Word: "$html$", Language: "html" },
+        { Word: "$kotlin$", Language: "kotlin" },
+        { Word: "$php$", Language: "php" },
+        { Word: "$py$", Language: "python" },
+        { Word: "$python$", Language: "python" },
+        { Word: "$ruby$", Language: "ruby" },
+        { Word: "$scss$", Language: "scss" },
+        { Word: "$shell$", Language: "shell" },
+        { Word: "$sql$", Language: "sql" },
+        { Word: "$swift$", Language: "swift" },
+        { Word: "$essiqueeli$", Language: "sql" },
+        { Word: "$xml$", Language: "xml" },
+        { Word: "$yaml$", Language: "yaml" },
+      ];
+
+      let indexLanguage = -1;
+      let whatLanguage = "";
+      let existeProg = false;
+
+      for (let i = 0; i < listLanguage.length; i++) {
+        indexLanguage = textQuestion
+          .toLowerCase()
+          .indexOf(`${String(listLanguage[i].Word)}`);
+        if (indexLanguage != -1) {
+          whatLanguage = String(listLanguage[i].Language);
+          existeProg = true;
+          break;
+        }
+      }
+
+      if (existeProg) {
+        return (
+          <code className="code-container no-decoration-radius">
+            {textAnswer}
+          </code>
+        );
+        existeProg = false;
+      } else {
+        return textAnswer;
       }
     } catch (error) {
       console.error(error);
@@ -107,7 +200,7 @@ export const Chat = () => {
                   <span className="block font-bold text-slate-700">
                     Netuno:
                   </span>
-                  {message.Answer}
+                  {message.Div}
                 </p>
               </div>
             </React.Fragment>
@@ -125,11 +218,12 @@ export const Chat = () => {
           />
           <Button
             type="button"
+            className="w-[110px]"
             onClick={() => {
               handleSubmit();
             }}
           >
-            Enviar
+            hein viado
           </Button>
         </div>
       </CardFooter>
